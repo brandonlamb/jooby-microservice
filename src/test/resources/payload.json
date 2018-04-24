@@ -1,0 +1,36 @@
+{
+  "quantities": [
+    {
+      "locationNumber": 101,
+      "countId": 1001,
+      "instanceId": 1001,
+      "sku": 7339,
+      "quantity": 10,
+      "state": "ambient"
+    },
+    {
+      "locationNumber": 101,
+      "countId": 1001,
+      "instanceId": 1001,
+      "sku": 7339,
+      "quantity": 3,
+      "state": "frozen"
+    },
+    {
+      "locationNumber": 101,
+      "countId": 1001,
+      "instanceId": 1001,
+      "sku": 1032,
+      "quantity": 2,
+      "state": "ambient"
+    },
+    {
+      "locationNumber": 101,
+      "countId": 1001,
+      "instanceId": 1001,
+      "sku": 1032,
+      "quantity": 2,
+      "state": "frozen"
+    }
+  ]
+}

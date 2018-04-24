@@ -1,0 +1,103 @@
+swagger: '2.0'
+info:
+  description: Create inventory position movement for items at a location.
+  version: 1.0.0
+  title: GRED Inventory Position Movement Write v1
+host: 'gred-api-test.starbucks.net'
+schemes:
+  - https
+basePath: /v1/inventory/positions/movement
+paths:
+  /:
+    post:
+      summary: Create Inventory Position Movement
+      description: Write inventory position movement.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Content-Type
+          in: header
+          type: string
+          format: media type
+          required: true
+          description: "application/json"
+        - in: body
+          name: movement
+          required: true
+          description: Inventory position movement command.
+          schema:
+            $ref: '#/definitions/InventoryPositionMovement'
+      responses:
+        202:
+          description: Success
+        400:
+          description: Error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - api_key: []
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: apikey
+    in: header
+definitions:
+  InventoryPositionMovement:
+    type: object
+    description: Inventory Position Movement command to write to Kafka.
+    required:
+      - fromState
+      - itemNumber
+      - locationNumber
+      - override
+      - quantity
+      - toState
+      - timestamp
+    properties:
+      fromState:
+        type: string
+        enum: [ FROZEN, THAWING, AMBIENT ]
+        description: Previous temperature of the item.
+        example: FROZEN
+      itemNumber:
+        type: number
+        format: int64
+        description: Unique number that identifies a product that is sold or is part of BOM.
+        example: 1
+      locationNumber:
+        type: integer
+        format: int32
+        description: Used to uniquely identify a location.
+        example: 1
+      override:
+        type: boolean
+        description: |
+          When the store performs a count on an item/state this action will override the quantity.
+        example: false
+      quantity:
+        type: integer
+        format: int32
+        description: The current on-hand for a given location/item/state.
+        example: 100
+      toState:
+        type: string
+        enum: [ FROZEN, THAWING, AMBIENT ]
+        description: Current temperature of the item.
+        example: THAWING
+      timestamp:
+        type: string
+        format: date-time
+        description: Date and time the transaction was logged in ISO-8601 format.
+        example: 2018-01-03T22:36:50.438Z
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+        example: 100001
+      message:
+        type: string
+        example: An XML parsing error has occurred

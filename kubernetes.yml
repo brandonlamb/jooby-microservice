@@ -1,0 +1,45 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: example-v1
+  namespace: platform
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: example-v1
+        environment: {{REPLACE_ENV}}
+    spec:
+      containers:
+      - name: example-v1
+        image: example-v1:{{REPLACE_REPO_TAG}}
+        resources:
+          limits:
+            memory: "384Mi"
+          requests:
+            memory: "384Mi"
+        ports:
+        - containerPort: 8080
+        env:
+          - name: APP_ENV
+            value: {{REPLACE_ENV}}
+          - name: API_NAME
+            value: example-v1
+          - name: KAFKA_HOSTS
+            valueFrom:
+              configMapKeyRef:
+                name: kafka
+                key: servers
+#        livenessProbe:
+#          httpGet:
+#           path: /health
+#           port: 8080
+#          initialDelaySeconds: 5
+#          timeoutSeconds: 1
+#        readinessProbe:
+#          httpGet:
+#           path: /readiness
+#           port: 8080
+#          initialDelaySeconds: 5
+#          timeoutSeconds: 1
