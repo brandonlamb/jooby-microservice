@@ -4,8 +4,9 @@ import com.google.common.util.concurrent.Futures
 import com.example.infrastructure.config.DefaultConfig
 import com.example.gred.infrastructure.kafka.inventorypositionmovement.Metadata
 import com.example.gred.infrastructure.kafka.inventorypositionmovement.MoveInventoryPosition
+import com.example.infrastructure.kafka.Rating.G
 import com.example.movie.domain.Movement
-import com.example.movie.domain.api.MovementWriteRepository
+import com.example.movie.domain.api.MovieWriteRepository
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.pmw.tinylog.Logger
 import reactor.core.publisher.Mono
@@ -16,10 +17,10 @@ import com.example.gred.infrastructure.kafka.inventorypositionmovement.Movement 
 import com.example.gred.infrastructure.kafka.inventorypositionmovement.State as StateProto
 
 @Singleton
-class MovementWriteRepository @Inject constructor(
+class MovieWriteRepository @Inject constructor(
   defaultConfig: DefaultConfig,
   producers: Producers
-) : MovementWriteRepository {
+) : MovieWriteRepository {
   private val config = defaultConfig.kafkaProducerConfig
   private val kafkaProducer = producers.movement
 
@@ -31,20 +32,10 @@ class MovementWriteRepository @Inject constructor(
     Mono
       .just(movement)
       .map {
-        MoveInventoryPosition
-          .Builder()
-          .metadata(Metadata.Builder().correlationId(UUID.randomUUID().toString()).tenantId(config.tenantId).build())
-          .data(MovementProto(
-            it.locationNumber,
-            it.itemNumber,
-            it.fromState?.convert(),
-            it.toState?.convert(),
-            it.quantity,
-            it.override,
-            it.timestamp.toString(),
-            it.id
-          ))
-          .build()
+        CreateMovie(
+          Metadata(UUID.randomUUID().toString(), config.tenantId),
+          Movie("name", G, "2018-01-01")
+        )
       }
       .map {
         val future = kafkaProducer.send(ProducerRecord(config.topic, it.metadata, it)) { _, e ->

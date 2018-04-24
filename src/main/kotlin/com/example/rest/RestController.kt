@@ -1,8 +1,7 @@
 package com.example.rest
 
 import com.example.infrastructure.config.DefaultConfig
-import com.example.gred.infrastructure.rest.inventorypositionmovement.Movement
-import com.example.movie.domain.api.MovementService
+import com.example.movie.domain.api.MovieService
 import org.jooby.Kooby
 import org.jooby.MediaType
 import org.jooby.Results
@@ -13,7 +12,7 @@ import com.example.movie.domain.Movement as DomainMovement
 class RestController : Kooby({
   post("/") { req ->
     val apiCodes = require(DefaultConfig::class.java).apiCodes
-    val movementService = require(MovementService::class.java)
+    val movementService = require(MovieService::class.java)
 
     Mono.just(req.body().to(Movement::class.java))
       .map { it.toDomain() }

@@ -1,7 +1,6 @@
 package com.example.infrastructure.kafka
 
-import com.example.gred.infrastructure.kafka.inventorypositionmovement.Metadata
-import com.example.gred.infrastructure.kafka.inventorypositionmovement.MoveInventoryPosition
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serializer
 
@@ -10,12 +9,12 @@ abstract class Adapter {
   open fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {}
 }
 
-class MetadataProtobufAdapter : Adapter(), Serializer<Metadata>, Deserializer<Metadata> {
-  override fun serialize(topic: String?, data: Metadata?): ByteArray = Metadata.ADAPTER.encode(data)
-  override fun deserialize(topic: String?, data: ByteArray?): Metadata = Metadata.ADAPTER.decode(data)
+class MetadataAdapter(private val mapper: ObjectMapper) : Adapter(), Serializer<Metadata>, Deserializer<Metadata> {
+  override fun serialize(topic: String?, data: Metadata?): ByteArray = mapper.writeValueAsBytes(data)
+  override fun deserialize(topic: String?, data: ByteArray?): Metadata = mapper.readValue(data, Metadata::class.java)
 }
 
-class MoveInventoryPositionProtobufAdapter : Adapter(), Serializer<MoveInventoryPosition>, Deserializer<MoveInventoryPosition> {
-  override fun serialize(topic: String?, data: MoveInventoryPosition?): ByteArray = MoveInventoryPosition.ADAPTER.encode(data)
-  override fun deserialize(topic: String?, data: ByteArray?): MoveInventoryPosition = MoveInventoryPosition.ADAPTER.decode(data)
+class CreateMovieAdapter(private val mapper: ObjectMapper) : Adapter(), Serializer<CreateMovie>, Deserializer<CreateMovie> {
+  override fun serialize(topic: String?, data: CreateMovie?): ByteArray = mapper.writeValueAsBytes(data)
+  override fun deserialize(topic: String?, data: ByteArray?): CreateMovie = mapper.readValue(data, CreateMovie::class.java)
 }

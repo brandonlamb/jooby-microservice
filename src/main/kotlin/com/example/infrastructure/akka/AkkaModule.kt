@@ -50,8 +50,6 @@ class AkkaModule : Jooby.Module {
 
     env.onStop { r ->
       val system = r.require(ActorSystem::class.java)
-
-      //    actorMaterializer.shutdown()
       Await.result(system.terminate(), Duration.create(30, TimeUnit.SECONDS))
     }
   }

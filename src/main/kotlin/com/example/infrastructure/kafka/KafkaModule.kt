@@ -7,8 +7,7 @@ import akka.stream.ActorMaterializer
 import akka.stream.ActorMaterializerSettings
 import akka.stream.Supervision
 import com.google.inject.Binder
-import com.example.gred.infrastructure.kafka.inventorypositionmovement.Metadata
-import com.example.gred.infrastructure.kafka.inventorypositionmovement.MoveInventoryPosition
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.typesafe.config.Config
 import org.apache.kafka.common.KafkaException
 import org.jooby.Env
@@ -41,10 +40,12 @@ class KafkaModule : Jooby.Module {
       actorSystem
     )
 
-    val producerSettings: ProducerSettings<Metadata, MoveInventoryPosition> = ProducerSettings.create(
+    val mapper = ObjectMapper()
+
+    val producerSettings: ProducerSettings<Metadata, CreateMovie> = ProducerSettings.create(
       actorSystem,
-      MetadataProtobufAdapter(),
-      MoveInventoryPositionProtobufAdapter()
+      MetadataAdapter(mapper),
+      CreateMovieAdapter(mapper)
     )
 
     binder.bind(ActorSystem::class.java).toInstance(actorSystem)

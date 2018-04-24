@@ -15,12 +15,12 @@ class ConfigModule : Jooby.Module {
     Logger.info("ConfigModule started")
 
     val kafkaProducerConfig = KafkaConfig(
-      conf.getString("gred.kafka.producer.move-inventory-position-topic"),
-      conf.getString("gred.kafka.producer.tenant-id")
+      conf.getString("example.kafka.producer.create-movie-topic"),
+      conf.getString("example.kafka.producer.tenant-id")
     )
 
     val apiCodes = conf
-      .getConfig("gred.api-codes")
+      .getConfig("example.api-codes")
       .entrySet()
       .map { Pair(it.key.toInt(), it.value.unwrapped().toString()) }
       .toMap()

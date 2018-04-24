@@ -6,7 +6,7 @@ import reactor.core.publisher.Mono
 /**
  * Movement Write Infrastructure Service
  */
-interface MovementWriteRepository {
+interface MovieWriteRepository {
   /**
    * Create an inventory position movement
    */

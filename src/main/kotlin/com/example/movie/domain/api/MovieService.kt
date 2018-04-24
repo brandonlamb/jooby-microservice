@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono
 /**
  * Movement Domain Service
  */
-interface MovementService {
+interface MovieService {
   /**
    * Generate a movement ID
    */
